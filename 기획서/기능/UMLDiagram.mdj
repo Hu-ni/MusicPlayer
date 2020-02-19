@@ -4351,7 +4351,8 @@
 										"$ref": "AAAAAAFwUzHOQFymVE8="
 									},
 									"name": "btn_Add",
-									"visibility": "private"
+									"visibility": "private",
+									"type": ""
 								},
 								{
 									"_type": "UMLAttribute",
@@ -4360,7 +4361,8 @@
 										"$ref": "AAAAAAFwUzHOQFymVE8="
 									},
 									"name": "lv_Music",
-									"visibility": "private"
+									"visibility": "private",
+									"type": ""
 								},
 								{
 									"_type": "UMLAttribute",

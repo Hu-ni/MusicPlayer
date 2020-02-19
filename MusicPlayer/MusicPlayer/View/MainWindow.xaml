@@ -1,0 +1,102 @@
+﻿<Window x:Class="MusicPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicPlayer"
+        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="640" Width="360" Background="#FFA7E1C5" ResizeMode="NoResize">
+    <DockPanel Margin="10">
+        <WrapPanel  VerticalAlignment="Top" HorizontalAlignment="Left" 
+                   Width="Auto" Height="Auto" Orientation="Horizontal" DockPanel.Dock="Top">
+            <Image Name ="img_Volume" 
+               Width="24" Source="{Binding svgSoundMaxImg}" 
+                   HorizontalAlignment="Left" Height="24" VerticalAlignment="Top"/>
+            <Slider Name="sl_Volume" VerticalAlignment="Top"  HorizontalAlignment="Left" Margin="10,0,0,0" Maximum="1000" Value="1000" Width="100"
+                    ValueChanged="sl_volume_ValueChanged"/>
+        </WrapPanel>
+        <DockPanel DockPanel.Dock="Top" Height="Auto" Width="Auto">
+            <Label Name="lb_Title" DockPanel.Dock="Top" HorizontalContentAlignment="Center" Width="Auto" Height="Auto" FontSize="24px">
+                음악을 추가해주세요
+            </Label>
+            <Grid DockPanel.Dock="Top">
+                <Button Name="btn_Prev" Width="Auto" Height="Auto" Margin="80, 16, 0, 0"
+                 Background="Transparent" BorderBrush="Transparent" Click="btn_Prev_Click" 
+                        VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <ContentControl>
+                        <StackPanel>
+                            <Image Width="48" Height="48" Source="{Binding svgPrevImg}"/>
+                        </StackPanel>
+                    </ContentControl>
+                </Button>
+                <Button Name="btn_Play" Width="Auto" Height="Auto"
+                VerticalAlignment="Top" HorizontalAlignment="Center"
+                Background="Transparent" BorderBrush="Transparent" Click="btn_Play_Click">
+                    <ContentControl>
+                        <StackPanel>
+                            <Image Name="img_Play" Width="64" Height="64" Source="{Binding svgPlayImg}"/>
+                        </StackPanel>
+                    </ContentControl>
+                </Button>
+
+                <Button Name="btn_Next" Width="Auto" Height="Auto" Margin="80, 16, 28, 0"
+                HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" 
+                VerticalAlignment="Top" Click="btn_Next_Click">
+                    <ContentControl>
+                        <StackPanel>
+                            <Image Width="48" Height="48" Source="{Binding svgNextImg}"/>
+                        </StackPanel>
+                    </ContentControl>
+                </Button>
+                <Button Name="btn_Stop" Width="Auto" Height="Auto" Margin="80, 16, 80, 0"
+                HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" 
+                VerticalAlignment="Top" Click="btn_Stop_Click">
+                    <ContentControl>
+                        <StackPanel>
+                            <Image Width="48" Height="48" Source="{Binding svgStopImg}"/>
+                        </StackPanel>
+                    </ContentControl>
+                </Button>
+            </Grid>
+            <Slider Name="sl_Music" 
+                DockPanel.Dock="Top" Margin="0, 10" Width="334" Maximum="100" MouseDown="sl_Music_MouseDown" MouseUp="sl_Music_MouseUp"/>
+        </DockPanel>
+
+        <Grid DockPanel.Dock="Top"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBox Name="tb_Search"
+                     FontSize="22px" Height="Auto" TextWrapping="NoWrap"
+                         TextChanged="tb_Search_TextChanged" Grid.ColumnSpan="3"/>
+            <ListView x:Name ="lv_Music"  Background="#F2F5E9"
+                  FontSize="16px" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2"/>
+            <Button x:Name="btn_Add" Width="Auto" Height="Auto" Background="Transparent" 
+                BorderBrush="Transparent" Click="btn_Add_Click" Grid.Row="2" Grid.Column="1" >
+                <ContentControl>
+                    <StackPanel>
+                        <Image Width="24" Height="24" Source="{Binding svgAddImg}"/>
+                    </StackPanel>
+                </ContentControl>
+            </Button>
+            <Button x:Name="btn_Delete" Width="Auto" Height="Auto"
+                 Background="Transparent" 
+                BorderBrush="Transparent" Click="btn_Delete_Click" Grid.Column="2" Grid.Row="2">
+                <ContentControl>
+                    <StackPanel>
+                        <Image Width="24" Height="24" Source="{Binding svgDeleteImg}"/>
+                    </StackPanel>
+                </ContentControl>
+            </Button>
+        </Grid>
+
+    </DockPanel>
+</Window>
