@@ -39,7 +39,7 @@ namespace MusicPlayer.ViewModel
 
         public void AddMusic(string filePath, string title)
         {
-            Music music = new Music(filePath, title, list.Capacity);
+            Music music = new Music(filePath, title, list.Count);
             list.Add(music);
         }
 
@@ -56,6 +56,7 @@ namespace MusicPlayer.ViewModel
 
             Status = Status.Play;
             list[index].Length = media.Length();
+            curMusicIndex = list[index].Index;
             return list[index];
         }
 
@@ -66,11 +67,12 @@ namespace MusicPlayer.ViewModel
                 media.Close();
             }
 
-            media.Open(list[index < 0 ? index = 0 : index > list.Capacity-1 ? list.Capacity-1 : index].FilePath);
+            media.Open(list[index < 0 ? index = 0 : index > list.Count-1 ? list.Count - 1 : index].FilePath);
 
             media.Play(loop, seekTime);
 
             list[index].Length = media.Length();
+            curMusicIndex = list[index].Index;
             Status = Status.Play;
             return list[index];
         }
@@ -101,15 +103,26 @@ namespace MusicPlayer.ViewModel
             {
                 media.Resume();
                 Status = Status.Play;
+                if (index != curMusicIndex)
+                {
+                    return PlayMusic(index, true);
+                }
             }
             else if (media.Status() == "stopped")    // 노래가 끝났거나 시작 전에는 새로 재생.
             {
                 media.Close();
-                return PlayMusic(curMusicIndex + 1, true);
+                if (index == -1)
+                    return PlayMusic(curMusicIndex + 1, true);
+                else
+                    return PlayMusic(index, true);
             }
             else
             {
-                if (list.Capacity > 0)
+                if(index != -1)
+                {
+                    return PlayMusic(index, true);
+                }
+                if (list.Count > 0)
                 {
                     return PlayMusic(curMusicIndex, true);
                 }
