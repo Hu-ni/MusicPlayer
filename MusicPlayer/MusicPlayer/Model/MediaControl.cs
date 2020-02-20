@@ -129,10 +129,18 @@ namespace MusicPlayer.Model
         {
             if (isOpen)
             {
-                Pcommand = "status MediaFile length";
-                mciSendString(Pcommand, ReturnData, ReturnData.Capacity, IntPtr.Zero);
+                try
+                {
+                    Pcommand = "status MediaFile length";
+                    mciSendString(Pcommand, ReturnData, ReturnData.Capacity, IntPtr.Zero);
 
-                return int.Parse(ReturnData.ToString());
+                    return int.Parse(ReturnData.ToString());
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+
             }
             else
                 return 0;

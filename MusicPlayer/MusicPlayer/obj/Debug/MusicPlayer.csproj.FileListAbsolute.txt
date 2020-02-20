@@ -19,3 +19,7 @@ C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\obj\
 C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\obj\Debug\MusicPlayer_Content.g.cs
 C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\obj\Debug\View\MainWindow.g.cs
 C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\obj\Debug\View\MainWindow.baml
+C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\bin\Debug\EntityFramework.dll
+C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\bin\Debug\EntityFramework.xml
+C:\Users\박훈\OneDrive\문서\Project\MusicPlayer\MusicPlayer\MusicPlayer\bin\Debug\EntityFramework.SqlServer.xml

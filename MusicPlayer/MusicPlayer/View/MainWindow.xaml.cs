@@ -39,11 +39,12 @@ namespace MusicPlayer
             };
             timer.Tick += Timer_Tick;
             timer.Start();
+
         }
 
         private bool UserFilter(object item)
         {
-            if (String.IsNullOrEmpty(tb_Search.Text))
+            if (string.IsNullOrEmpty(tb_Search.Text))
                 return true;
             else
                 return ((item as Music).Title.IndexOf(tb_Search.Text, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -160,12 +161,12 @@ namespace MusicPlayer
         {
             if (music.Status == Status.Play || music.Status == Status.Pause)
             {
-                if(isTrackBarScroling != true)
+                if (!isTrackBarScroling)
                 {
                     sl_Music.Value = music.GetPosition();
                 }
             }
-            else if(music.Status == Status.Stop)
+            else if (music.Status == Status.Stop)
             {
                 sl_Music.Value = 0;
             }
@@ -197,6 +198,8 @@ namespace MusicPlayer
 
         private void btn_Play_Click(object sender, RoutedEventArgs e)
         {
+            if (music.GetPlayList().Count < 1)
+                return;
             Music curMusic = music.MusicControl(lv_Music.SelectedIndex);
             if(music.Status == Status.Play)
             {
@@ -226,13 +229,19 @@ namespace MusicPlayer
                 music.AddMusic(filePath, title);
             }
 
+            lv_Music.ItemsSource = music.GetPlayList();
             CollectionViewSource.GetDefaultView(lv_Music.ItemsSource).Refresh();
         }
 
         private void btn_Delete_Click(object sender, RoutedEventArgs e)
         {
-            music.DeleteMusic(lv_Music.SelectedIndex);
-            CollectionViewSource.GetDefaultView(lv_Music.ItemsSource).Refresh();
+            if (music.DeleteMusic(lv_Music.SelectedIndex))
+            {
+                lv_Music.ItemsSource = music.GetPlayList();
+                CollectionViewSource.GetDefaultView(lv_Music.ItemsSource).Refresh();
+            }
+            else
+                Console.WriteLine("Error!");
         }
 
         private void tb_Search_TextChanged(object sender, TextChangedEventArgs e)
@@ -251,14 +260,25 @@ namespace MusicPlayer
         private void sl_Music_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             isTrackBarScroling = true;
+
         }
 
         private void sl_Music_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            isTrackBarScroling = false;
-            Music curMusic = music.PlayMusic(music.curMusicIndex, true, (int)sl_Music.Value);
 
-            lb_Title.Content = curMusic.Title;
+            isTrackBarScroling = false;
+            if(music.GetPlayList().Count > 0)
+            {
+                if (music.Status == Status.Pause || music.Status == Status.Stop)
+                {
+                    img_Play.Source = svgPauseImg;
+                }
+                Music curMusic = music.PlayMusic(music.curMusicIndex, true, (int)sl_Music.Value);
+                sl_Music.Maximum = curMusic.Length;
+
+                lb_Title.Content = curMusic.Title;
+            }
+
         }
     }
 }

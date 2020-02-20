@@ -24,6 +24,7 @@ namespace MusicPlayer.ViewModel
 
         #region 변수
         private List<Music> list = new List<Music>();
+        private MusicContext mc = new MusicContext();
         private MediaControl media = MediaControl.Instance;
         #endregion
 
@@ -34,13 +35,21 @@ namespace MusicPlayer.ViewModel
         {
             curMusicIndex = 0;
             Status = Status.Stop;
+            SetPlayList();
         }
 
 
         public void AddMusic(string filePath, string title)
         {
-            Music music = new Music(filePath, title, list.Count);
-            list.Add(music);
+            Music music = new Music
+            {
+                FilePath = filePath,
+                Title = title
+            };
+            mc.Musics.Add(music);
+            mc.SaveChanges();
+
+            SetPlayList();
         }
 
         public Music PlayMusic(int index, bool loop)
@@ -49,15 +58,22 @@ namespace MusicPlayer.ViewModel
             {
                 media.Close();
             }
-            
-            media.Open(list[index < 0 ? index = 0 : index > list.Capacity ? list.Capacity : index].FilePath);
 
+            media.Close();
+
+            int i = index < 0 ? 0 : index > mc.Musics.ToList().Count - 1 ? mc.Musics.ToList().Count - 1 : index;
+            Music music = mc.Musics.ToList()[i];
+
+            if (music == null)
+                return null;
+
+            media.Open(music.FilePath);
             media.Play(loop);
 
+            music.Length = media.Length();
+            curMusicIndex = i;
             Status = Status.Play;
-            list[index].Length = media.Length();
-            curMusicIndex = list[index].Index;
-            return list[index];
+            return music;
         }
 
         public Music PlayMusic(int index, bool loop, int seekTime)
@@ -67,23 +83,32 @@ namespace MusicPlayer.ViewModel
                 media.Close();
             }
 
-            media.Open(list[index < 0 ? index = 0 : index > list.Count-1 ? list.Count - 1 : index].FilePath);
+            media.Close();
+            int i = index < 0 ? 0 : index > mc.Musics.ToList().Count - 1 ? mc.Musics.ToList().Count - 1 : index;
+            Music music =(Music) mc.Musics.Where(m => (m.Index - 1) == i).Take(1);
 
+            if (music == null) 
+                return null;
+
+            media.Open(music.FilePath);
             media.Play(loop, seekTime);
 
-            list[index].Length = media.Length();
-            curMusicIndex = list[index].Index;
+            music.Length = media.Length();
+            curMusicIndex = i;
             Status = Status.Play;
-            return list[index];
+            return music;
         }
 
-        public void DeleteMusic(int index)
+        public bool DeleteMusic(int index)
         {
-            for(int i = index;i<list.Count; i++)
-            {
-                list[i].PullingIndex();
-            }
-            list.RemoveAt(index);    
+            Music music = mc.Musics.ToList()[index];
+            if (music == null) return false;
+
+            mc.Musics.Remove(music);
+            mc.SaveChanges();
+
+            SetPlayList();
+            return true;
         }
 
         public void StopMusic() 
@@ -94,12 +119,12 @@ namespace MusicPlayer.ViewModel
 
         public Music MusicControl(int index)
         {
-            if (media.Status() == "playing")    // 재생 중일때는 일시정지
+            if (media.Status() == "playing" || Status == Status.Play)    // 재생 중일때는 일시정지
             {
                 media.Pause();
                 Status = Status.Pause;
             }
-            else if (media.Status() == "paused" )    // 일시정지 중일 때는 다시 재생
+            else if (media.Status() == "paused" || Status == Status.Pause )    // 일시정지 중일 때는 다시 재생
             {
                 media.Resume();
                 Status = Status.Play;
@@ -108,11 +133,11 @@ namespace MusicPlayer.ViewModel
                     return PlayMusic(index, true);
                 }
             }
-            else if (media.Status() == "stopped")    // 노래가 끝났거나 시작 전에는 새로 재생.
+            else if (media.Status() == "stopped" || Status == Status.Stop)    // 노래가 끝났거나 시작 전에는 새로 재생.
             {
                 media.Close();
                 if (index == -1)
-                    return PlayMusic(curMusicIndex + 1, true);
+                    return PlayMusic(curMusicIndex, true);
                 else
                     return PlayMusic(index, true);
             }
@@ -122,7 +147,7 @@ namespace MusicPlayer.ViewModel
                 {
                     return PlayMusic(index, true);
                 }
-                if (list.Count > 0)
+                if ((mc.Musics.ToList().Count - 1) > 0)
                 {
                     return PlayMusic(curMusicIndex, true);
                 }
@@ -131,8 +156,14 @@ namespace MusicPlayer.ViewModel
                     media.Close();
                 }
             }
-            return list[curMusicIndex];
+            return mc.Musics.ToList()[curMusicIndex];
 
+        }
+
+        private void SetPlayList()
+        {
+            Console.WriteLine("aaa");
+            list = mc.Musics.ToList();
         }
 
         public List<Music> GetPlayList()
