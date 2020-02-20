@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="Model\MusicContext.cs" />
     <Compile Include="Model\PlayList.cs" />
+    <Compile Include="MusicException.cs" />
     <Compile Include="ViewModel\MusicViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

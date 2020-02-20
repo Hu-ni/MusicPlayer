@@ -125,22 +125,15 @@ namespace MusicPlayer.Model
             return ReturnData.ToString();
         }
 
-        public int Length()    // 현재 선택된 음악의 길이를 ms단위로 반환
+        public int Length()  // 현재 선택된 음악의 길이를 ms단위로 반환
         {
             if (isOpen)
             {
-                try
-                {
-                    Pcommand = "status MediaFile length";
-                    mciSendString(Pcommand, ReturnData, ReturnData.Capacity, IntPtr.Zero);
-
-                    return int.Parse(ReturnData.ToString());
-                }
-                catch (Exception)
-                {
+                Pcommand = "status MediaFile length";
+                mciSendString(Pcommand, ReturnData, ReturnData.Capacity, IntPtr.Zero);
+                if (string.IsNullOrEmpty(ReturnData.ToString()))
                     return 0;
-                }
-
+                return int.Parse(ReturnData.ToString());
             }
             else
                 return 0;
@@ -153,6 +146,8 @@ namespace MusicPlayer.Model
                 Pcommand = "status MediaFile position";
                 mciSendString(Pcommand, ReturnData, ReturnData.Capacity, IntPtr.Zero);
 
+                if (string.IsNullOrEmpty(ReturnData.ToString()))
+                    return 0;
                 return int.Parse(ReturnData.ToString());
             }
             else
